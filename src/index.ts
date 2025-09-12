@@ -1,41 +1,13 @@
-// Initial command setup ghostts <filename>
+/*
+ * GhostTs Library API
+ *
+ * This file exports the core functionality of GhostTs.
+ * Users can import compileTs and runFile programmatically
+ * if they want to embed GhostTs functionality into their own Node.js scripts.
+ */
 
-import { Command } from "commander";
+export { compileTs } from "./core/compiler";
+export { runFile } from "./core/runner";
 
-interface CliOptions {
-  watch?: boolean;
-  build?: BuildOptions;
-}
-interface BuildOptions {
-  mode: "build";
-  outdir: string;
-}
-
-const program = new Command();
-
-program.name("ghostts").description("GhostTs -- zero-config Typescript tool");
-
-program
-  .argument("<file>", "entry .ts file")
-  .option("-w, --watch", "watch mode")
-  .action(async (file: string, option: CliOptions) => {
-    try {
-      if (option.watch) {
-        await watchFile(file);
-      } else {
-        await runFile(file);
-      }
-    } catch (error) {
-      console.log("Error: ", error);
-      process.exit(1);
-    }
-  });
-
-program
-  .command("build")
-  .argument("<file>", "entry .ts file")
-  .option("--outdir <dir>", "output directory", "./dist")
-  .action(async (file: string, option: CliOptions) => {});
-//Disk-base compilation for deployment
-
-program.parse();
+// Future export
+// export { formatError } from "./core/errors";
