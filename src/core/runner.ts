@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import { compileTs } from "./compiler";
 
 interface RunFileOptions {
@@ -10,24 +10,20 @@ interface RunFileOptions {
   watch?: boolean;
 }
 
-export async function runFile(options: RunFileOptions): Promise<void> {
+export async function runFile(options: RunFileOptions): Promise<ChildProcess> {
   try {
     const outFile = await compileTs(options.entryFile);
     if (!outFile || typeof outFile !== "string") {
       throw new Error("Expected compiled output file path, but got nothing");
     }
-
-    return new Promise((resolve, reject) => {
-      const child = spawn("node", [outFile], { stdio: "inherit" });
-
-      child.on("exit", (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`Process exited with code ${code}`));
-        }
-      });
-      child.on("error", reject);
+    const child = spawn("node", [outFile], {
+      stdio: "inherit",
     });
-  } catch (error) {}
+    child.on("error", (err: any) => {
+      console.error("Failed to start subprocess.", err);
+    });
+    return child;
+  } catch (error) {
+    throw error;
+  }
 }

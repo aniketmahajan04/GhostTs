@@ -4,6 +4,7 @@
 
 import { Command } from "commander";
 import { runFile } from "../core/runner";
+import { watchFile } from "../watch/watcher";
 
 interface CliOptions {
   watch?: boolean;
@@ -24,8 +25,8 @@ program
   .action(async (file: string, option: CliOptions) => {
     try {
       if (option.watch) {
-        console.log("watch");
-        // await watchFile(file);
+        console.log("watching...");
+        await watchFile(file);
       } else {
         await runFile({ entryFile: file });
       }

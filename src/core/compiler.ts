@@ -1,5 +1,6 @@
 import { build } from "esbuild";
 import path from "path";
+import fs from "fs";
 
 interface CompileOptions {
   mode?: "run" | "build";
