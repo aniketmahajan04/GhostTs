@@ -1,28 +1,40 @@
 import { build } from "esbuild";
 import path from "path";
-import fs from "fs";
+import { promises as fs } from "fs";
 
 interface CompileOptions {
   mode?: "run" | "build";
   outdir?: string;
+  srcDir?: string;
 }
 export async function compileTs(
   entryFile: string,
-  option: CompileOptions = { mode: "run" },
+  option: CompileOptions
 ): Promise<string | void> {
   try {
     if (option.mode === "build") {
+      const srcDir = option.srcDir ?? "src";
+      const outDir = option.outdir ?? "dist";
+
+      const relPath = path.relative(srcDir, entryFile).replace(/\.ts$/, ".js");
+      const outPath = path.resolve(outDir, relPath);
+
+      // Ensure the output directory exists
+      const outFileDir = path.dirname(outPath);
+      await fs.mkdir(outFileDir, { recursive: true });
+
       await build({
         entryPoints: [entryFile],
-        bundle: true,
+        bundle: false,
         platform: "node",
         format: "cjs",
-        sourcemap: "inline",
+        sourcemap: true,
         logLevel: "silent",
-        write: option.mode === "build", // write only in build modes
-        outdir: option.mode === "build" ? (option.outdir ?? "dist") : undefined,
+        outdir: path.dirname(outPath),
+        write: true,
+        target: "node14",
       });
-      return;
+      return outPath;
     } else {
       const outFile = path.resolve(process.cwd(), ".ghostts", "run.js");
       await build({

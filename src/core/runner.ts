@@ -12,7 +12,7 @@ interface RunFileOptions {
 
 export async function runFile(options: RunFileOptions): Promise<ChildProcess> {
   try {
-    const outFile = await compileTs(options.entryFile);
+    const outFile = await compileTs(options.entryFile, { mode: "run" });
     if (!outFile || typeof outFile !== "string") {
       throw new Error("Expected compiled output file path, but got nothing");
     }

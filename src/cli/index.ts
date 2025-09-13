@@ -5,14 +5,14 @@
 import { Command } from "commander";
 import { runFile } from "../core/runner";
 import { watchFile } from "../watch/watcher";
+import { buildProject } from "../core/builder";
 
 interface CliOptions {
   watch?: boolean;
-  build?: BuildOptions;
 }
 interface BuildOptions {
   mode: "build";
-  outdir: string;
+  outdir?: string;
 }
 
 const program = new Command();
@@ -38,9 +38,17 @@ program
 
 program
   .command("build")
-  .argument("<file>", "entry .ts file")
+  .argument("<srcDir>", "source folder (like ./src)")
   .option("--outdir <dir>", "output directory", "./dist")
-  .action(async (file: string, option: CliOptions) => {});
+  .action(async (srcDir: string, option: BuildOptions) => {
+    try {
+      console.log(`🔨 Building project from ${srcDir} to ${option.outdir}`);
+      await buildProject({ srcDir, outDir: option.outdir });
+    } catch (error) {
+      console.error("❌ Build failed:", error);
+      process.exit(1);
+    }
+  });
 //Disk-base compilation for deployment
 
 program.parse();

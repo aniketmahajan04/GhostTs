@@ -1,1 +1,1 @@
-{"root":["./src/cli/index.ts","./src/core/compiler.ts","./src/core/runner.ts","./src/util/utils.ts","./src/watch/watcher.ts"],"version":"5.9.2"}
+{"root":["./src/cli/index.ts","./src/core/builder.ts","./src/core/compiler.ts","./src/core/runner.ts","./src/util/utils.ts","./src/watch/watcher.ts"],"version":"5.9.2"}
