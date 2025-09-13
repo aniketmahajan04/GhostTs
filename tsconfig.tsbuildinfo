@@ -1,1 +1,1 @@
-{"root":["./src/index.ts"],"version":"5.8.2"}
+{"root":["./src/cli/index.ts","./src/core/compiler.ts","./src/core/runner.ts"],"version":"5.9.2"}

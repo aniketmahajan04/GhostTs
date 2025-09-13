@@ -18,6 +18,9 @@
     "commander": "^14.0.0",
     "esbuild": "^0.25.9"
   },
+  "bin": {
+    "ghostts": "./dist/cli/index.js"
+  },
   "devDependencies": {
     "@types/node": "^24.3.1",
     "eslint": "^9.35.0",

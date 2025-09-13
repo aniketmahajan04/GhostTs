@@ -1,6 +1,9 @@
+#!/usr/bin/env node
+
 // Initial command setup ghostts <filename>
 
 import { Command } from "commander";
+import { runFile } from "../core/runner";
 
 interface CliOptions {
   watch?: boolean;
@@ -21,9 +24,10 @@ program
   .action(async (file: string, option: CliOptions) => {
     try {
       if (option.watch) {
-        await watchFile(file);
+        console.log("watch");
+        // await watchFile(file);
       } else {
-        await runFile(file);
+        await runFile({ entryFile: file });
       }
     } catch (error) {
       console.log("Error: ", error);

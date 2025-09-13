@@ -23,7 +23,7 @@ export async function compileTs(
       });
       return;
     } else {
-      const outFile = path.join(process.cwd(), "ghostts_out.js");
+      const outFile = path.resolve(process.cwd(), ".ghostts", "run.js");
       await build({
         entryPoints: [entryFile],
         bundle: true,
