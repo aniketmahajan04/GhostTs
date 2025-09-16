@@ -1,33 +1,9 @@
 "use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// dummy/src/utils/math.ts
-var math_exports = {};
-__export(math_exports, {
-  add: () => add
-});
-module.exports = __toCommonJS(math_exports);
-function add(a, b) {
-  return a + b;
+// test.ts
+function greet(name) {
+  return "Hello " + name;
 }
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  add
-});
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vZHVtbXkvc3JjL3V0aWxzL21hdGgudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImV4cG9ydCBmdW5jdGlvbiBhZGQoYTogbnVtYmVyLCBiOiBudW1iZXIpIHtcbiAgcmV0dXJuIGEgKyBiO1xufVxuIl0sCiAgIm1hcHBpbmdzIjogIjs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQU8sU0FBUyxJQUFJLEdBQVcsR0FBVztBQUN4QyxTQUFPLElBQUk7QUFDYjsiLAogICJuYW1lcyI6IFtdCn0K
+var msg = greet(42);
+console.log(msg);
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vdGVzdC50cyJdLAogICJzb3VyY2VzQ29udGVudCI6IFsiZnVuY3Rpb24gZ3JlZXQobmFtZTogc3RyaW5nKSB7XG4gIHJldHVybiBcIkhlbGxvIFwiICsgbmFtZTtcbn1cblxuY29uc3QgbXNnOiBudW1iZXIgPSBncmVldCg0Mik7IC8vIFx1Mjc0QyBhc3NpZ25pbmcgc3RyaW5nIHRvIG51bWJlclxuY29uc29sZS5sb2cobXNnKTtcbiJdLAogICJtYXBwaW5ncyI6ICI7OztBQUFBLFNBQVMsTUFBTSxNQUFjO0FBQzNCLFNBQU8sV0FBVztBQUNwQjtBQUVBLElBQU0sTUFBYyxNQUFNLEVBQUU7QUFDNUIsUUFBUSxJQUFJLEdBQUc7IiwKICAibmFtZXMiOiBbXQp9Cg==
