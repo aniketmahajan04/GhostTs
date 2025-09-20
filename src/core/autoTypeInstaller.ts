@@ -69,4 +69,75 @@ export class AutoTypeInstaller {
 
     return packageJsonResult;
   }
+
+  private parseTypeErrors(errors: string[]): string[] {
+    const missingTypes = new Ser<string>();
+
+    for (const error of errors) {
+      // Parse Typescript errors like
+      // "Could not find module 'express' or its corresponding type declarations."
+      // "Could not find a declaration file for module 'lodash'."
+
+      const moduleMatch = error.match(
+        /Could not find module ['"`]([^'"`]+)['"`].*type declarations/,
+      );
+      if (moduleMatch) {
+        const moduleName = moduleMatch[1];
+        if (this.needsType(moduleName)) {
+          missingTypes.add(moduleName);
+        }
+      }
+
+      const declarationMatch = error.match(
+        /Could not find a declaration file for module ['"`]([^'"`]+)['"`]/,
+      );
+      if (declarationMatch) {
+        const moduleName = declarationMatch[1];
+        if (this.needsType(moduleName)) {
+          missingTypes.add(moduleName);
+        }
+      }
+    }
+    return Array.from(missingTypes);
+  }
+
+  private async findMissingTypes(
+    dependencies: Record<string, string>,
+  ): Promise<string[]> {
+    const missingTypes: string[] = [];
+
+    for (const packageName of Object.keys(dependencies)) {
+      // skip package that don't need types
+      if (!this.needsType(packageName)) {
+        continue;
+      }
+
+      const typePackageName = `@types/${packageName}`;
+
+      // check if @types are already installed
+      if (
+        !dependencies[typePackageName] &&
+        !(await this.isTypePackageInstalled(typePackageName))
+      ) {
+        // check if @types package exists on npm
+        if (await this.typePackageExists(typePackageName)) {
+          missingTypes.push(typePackageName);
+        }
+      }
+    }
+    return missingTypes;
+  }
+  private needsType(packageName: string): boolean {
+    // package that don't need @types (have built-in types)
+    const hasBuiltInTypes = [
+      "typescript",
+      "react",
+      "vue",
+      "svelte",
+      "@types/", // already types package
+      "ghostts", // our own package
+    ];
+
+    return !hasBuiltInTypes.some((pkg) => packageName.startsWith(pkg));
+  }
 }
