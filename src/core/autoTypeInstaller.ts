@@ -73,26 +73,26 @@ export class AutoTypeInstaller {
   private parseTypeErrors(errors: string[]): string[] {
     const missingTypes = new Set<string>();
 
-    console.log("DEBUG: Processing", errors.length, "errors");
     for (const error of errors) {
+      // ADD THIS HERE - Handle "Could not resolve" errors first
+      if (error.includes("Could not resolve")) {
+        const packageName = error.match(/"([^"]+)"/)?.[1];
+        if (packageName) {
+          console.log(
+            `💡 Package '${packageName}' needs to be installed: npm install ${packageName}`
+          );
+        }
+        continue; // Skip to next error
+      }
       // Parse Typescript errors like
       // "Could not find module 'express' or its corresponding type declarations."
       // "Could not find a declaration file for module 'lodash'."
 
-      console.log("DEBUG: Error text:", error);
-
-      const moduleMatch = error.match(
-        // /Connot find module (?:'([^']+)'|"([^"]+)") or its corresponding type declarations/i
-        /Cannot find module '([^']+)'/i
-      );
+      const moduleMatch = error.match(/Cannot find module '([^']+)'/i);
       if (moduleMatch) {
-        console.log("DEBUG: Found module match:", moduleMatch[1]);
         const moduleName = moduleMatch[1];
         if (this.needsType(moduleName)) {
           missingTypes.add(`@types/${moduleName}`);
-          console.log("DEBUG: Added to missing types:", `@types/${moduleName}`);
-        } else {
-          console.log("DEBUG: No match for error");
         }
       }
 
