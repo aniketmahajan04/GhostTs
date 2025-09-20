@@ -1,5 +1,7 @@
 import { ChildProcess, spawn } from "child_process";
 import { compileTs } from "./compiler";
+import { AutoTypeInstaller } from "./autoTypeInstaller";
+import path from "path";
 import {
   formatError,
   formatRuntimeError,
@@ -18,17 +20,37 @@ interface RunFileOptions {
 
 export async function runFile(options: RunFileOptions): Promise<ChildProcess> {
   try {
+    const projectRoot = path.dirname(options.entryFile);
+    const typeInstaller = new AutoTypeInstaller(projectRoot);
+    // First try package.json
+    await typeInstaller.installFromPackageJson();
+
+    // Type checking
     console.log("🔍 type checking...");
-    const result = typeCheckWithAPI(options.entryFile);
+    let result = typeCheckWithAPI(options.entryFile);
 
     if (!result.success) {
-      console.log(`❌ Found ${result.diagnostics.length} type error(s):\n`);
-
-      for (const diagnostic of result.diagnostics) {
-        console.error(formatTSDiagnostic(diagnostic));
+      const errorMessages = result.diagnostics.map((d) =>
+        typeof d.messageText === "string"
+          ? d.messageText
+          : d.messageText.messageText,
+      );
+      const installResult =
+        await typeInstaller.installFromErrors(errorMessages);
+      if (installResult.installed.length > 0) {
+        // Retry type checking after installation types
+        console.log("🔄 Retrying type checking...");
+        result = typeCheckWithAPI(options.entryFile);
       }
+      // if still errors, show them and exit
+      if (!result.success) {
+        console.log(`❌ Found ${result.diagnostics.length} type error(s):\n`);
+        for (const diagnostic of result.diagnostics) {
+          console.error(formatTSDiagnostic(diagnostic));
+        }
 
-      process.exit(1);
+        process.exit(1);
+      }
     }
 
     const outFile = await compileTs(options.entryFile, { mode: "run" });

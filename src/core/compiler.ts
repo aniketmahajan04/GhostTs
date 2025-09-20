@@ -33,6 +33,9 @@ export async function compileTs(
         outdir: path.dirname(outPath),
         write: true,
         target: "node14",
+        allowOverwrite: true,
+        mainFields: ["main", "module"],
+        conditions: ["node"],
       });
       return outPath;
     } else {
@@ -46,6 +49,9 @@ export async function compileTs(
         logLevel: "silent",
         write: true,
         outfile: outFile,
+        allowOverwrite: true,
+        mainFields: ["main", "module"],
+        conditions: ["node"],
       });
       return outFile;
     }
