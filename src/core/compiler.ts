@@ -7,6 +7,15 @@ interface CompileOptions {
   outdir?: string;
   srcDir?: string;
 }
+
+const loaderConfig = {
+  ".json": "json" as const,
+  ".sql": "text" as const,
+  ".html": "text" as const,
+  ".txt": "text" as const,
+  ".md": "text" as const,
+};
+
 export async function compileTs(
   entryFile: string,
   option: CompileOptions
@@ -15,7 +24,10 @@ export async function compileTs(
     if (option.mode === "build") {
       const srcDir = option.srcDir ?? "src";
       const outDir = option.outdir ?? "dist";
-
+      const alias = {
+        "@": srcDir,
+        "~": srcDir,
+      };
       const relPath = path.relative(srcDir, entryFile).replace(/\.ts$/, ".js");
       const outPath = path.resolve(outDir, relPath);
 
@@ -36,6 +48,8 @@ export async function compileTs(
         allowOverwrite: true,
         mainFields: ["main", "module"],
         conditions: ["node"],
+        loader: loaderConfig,
+        alias: alias,
       });
       return outPath;
     } else {
@@ -52,6 +66,8 @@ export async function compileTs(
         allowOverwrite: true,
         mainFields: ["main", "module"],
         conditions: ["node"],
+        loader: loaderConfig,
+        // alias: alias,
       });
       return outFile;
     }
