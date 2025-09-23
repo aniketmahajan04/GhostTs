@@ -1,3 +1,4 @@
+import path from "path";
 import * as ts from "typescript";
 
 interface TypeChechResult {
@@ -14,6 +15,12 @@ export function typeCheckWithAPI(filepath: string): TypeChechResult {
     esModuleInterop: true, // Add this
     allowSyntheticDefaultImports: true, // Add this
     skipLibCheck: true, // Add this to skip @types issue
+    resolveJsonModule: true,
+    baseUrl: path.dirname(filepath),
+    paths: {
+      "@/*": ["./*"],
+      "~/*": ["./*"],
+    },
   });
 
   const diagnostics = ts.getPreEmitDiagnostics(program);

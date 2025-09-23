@@ -21,13 +21,15 @@ export async function compileTs(
   option: CompileOptions
 ): Promise<string | void> {
   try {
+    const projectRoot = path.dirname(entryFile);
+    const alias = {
+      "@": projectRoot,
+      "~": projectRoot,
+    };
     if (option.mode === "build") {
       const srcDir = option.srcDir ?? "src";
       const outDir = option.outdir ?? "dist";
-      const alias = {
-        "@": srcDir,
-        "~": srcDir,
-      };
+
       const relPath = path.relative(srcDir, entryFile).replace(/\.ts$/, ".js");
       const outPath = path.resolve(outDir, relPath);
 
@@ -67,7 +69,7 @@ export async function compileTs(
         mainFields: ["main", "module"],
         conditions: ["node"],
         loader: loaderConfig,
-        // alias: alias,
+        alias: alias,
       });
       return outFile;
     }
