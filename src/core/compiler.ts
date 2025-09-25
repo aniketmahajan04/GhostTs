@@ -10,10 +10,12 @@ interface CompileOptions {
 
 const loaderConfig = {
   ".json": "json" as const,
-  ".sql": "text" as const,
-  ".html": "text" as const,
-  ".txt": "text" as const,
-  ".md": "text" as const,
+
+  // may be in future
+  // ".sql": "text" as const,
+  // ".html": "text" as const,
+  // ".txt": "text" as const,
+  // ".md": "text" as const,
 };
 
 export async function compileTs(

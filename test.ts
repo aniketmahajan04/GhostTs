@@ -1,7 +1,4 @@
 import config from "./src/config/config.json";
-import sqlQuery from "./database/queries.sql";
-// import emailTemplate from "./templates/email-Template.html";
-// import readme from "./docs/README.md";
 import { formatDate, generateId } from "@/lib/utils"; // working
 
 console.log("=== Loader Tests ===");
