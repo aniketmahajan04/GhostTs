@@ -7,28 +7,36 @@ interface TypeChechResult {
 }
 
 export function typeCheckWithAPI(filepath: string): TypeChechResult {
-  const program = ts.createProgram([filepath], {
-    target: ts.ScriptTarget.ES2020,
-    module: ts.ModuleKind.CommonJS,
-    strict: true,
-    noEmit: true,
-    esModuleInterop: true, // Add this
-    allowSyntheticDefaultImports: true, // Add this
-    skipLibCheck: true, // Add this to skip @types issue
-    resolveJsonModule: true,
-    baseUrl: path.dirname(filepath),
-    paths: {
-      "@/*": ["./*"],
-      "~/*": ["./*"],
-    },
-  });
+  try {
+    const program = ts.createProgram([filepath], {
+      target: ts.ScriptTarget.ES2020,
+      module: ts.ModuleKind.CommonJS,
+      strict: true,
+      noEmit: true,
+      esModuleInterop: true, // Add this
+      allowSyntheticDefaultImports: true, // Add this
+      skipLibCheck: true, // Add this to skip @types issue
+      resolveJsonModule: true,
+      baseUrl: path.dirname(filepath),
+      paths: {
+        "@/*": ["./*"],
+        "~/*": ["./*"],
+      },
+    });
 
-  const diagnostics = ts.getPreEmitDiagnostics(program);
+    const diagnostics = ts.getPreEmitDiagnostics(program);
 
-  return {
-    success: diagnostics.length === 0,
-    diagnostics: diagnostics.filter(
-      (d) => d.category === ts.DiagnosticCategory.Error
-    ),
-  };
+    return {
+      success: diagnostics.length === 0,
+      diagnostics: diagnostics.filter(
+        (d) => d.category === ts.DiagnosticCategory.Error
+      ),
+    };
+  } catch (error) {
+    console.log("Type checking failed:", error);
+    return {
+      success: false,
+      diagnostics: [],
+    };
+  }
 }
