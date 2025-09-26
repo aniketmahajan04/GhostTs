@@ -4,13 +4,12 @@ import chokidar from "chokidar";
 import { showSpinner } from "../util/utils";
 import path from "path";
 import { AutoTypeInstaller } from "../core/autoTypeInstaller";
-import { clear } from "console";
 
 const PROCESS_KILL_TIMEOUT = 1000;
 
 export async function watchFile(entryFile: string) {
   let child: ChildProcess | null = null;
-  // let typeInstallerInitialized = false;
+  let typeInstallerInitialized = false;
   const projectRoot = path.dirname(entryFile);
   let rebuildTimeout: NodeJS.Timeout | null = null;
 
@@ -59,11 +58,11 @@ export async function watchFile(entryFile: string) {
       }
 
       // Only run type installer on initial run or if package.json changes
-      // if (isInitial && !typeInstallerInitialized) {
-      //   const typeInstaller = new AutoTypeInstaller(projectRoot);
-      //   await typeInstaller.installFromPackageJson();
-      //   typeInstallerInitialized = true;
-      // }
+      if (!typeInstallerInitialized) {
+        const typeInstaller = new AutoTypeInstaller(projectRoot);
+        await typeInstaller.installFromPackageJson();
+        typeInstallerInitialized = true;
+      }
 
       //   console.log("🚀 Starting new process...");
       child = await runFile({ entryFile: entryFile });
@@ -91,29 +90,30 @@ export async function watchFile(entryFile: string) {
 
   watcher.on("change", async (path) => {
     console.log("🔥 File change detected:", path);
+    console.clear();
 
     // Reset type installer if package.json changes
-    // if (path.endsWith("package.json")) {
-    //   typeInstallerInitialized = false;
-    //   console.log("📦 Dependencies changed, will re-check types...");
-    //   await runOnce(true);
-    // } else {
-    //   console.log(`👻 Rebuilding due to change in ${path}...`);
-    //   await runOnce(false); // Skip type installer
-    // }
-
-    // Clear previous timeout
-    if (rebuildTimeout) {
-      clearTimeout(rebuildTimeout);
+    if (path.endsWith("package.json")) {
+      typeInstallerInitialized = false;
+      console.log("📦 Dependencies changed, will re-check types...");
+      await runOnce();
+    } else {
+      console.log(`👻 Rebuilding due to change in ${path}...`);
+      await runOnce(); // Skip type installer
     }
 
-    // Debounce rebuilds by 500ms
-    rebuildTimeout = setTimeout(async () => {
-      // console.clear();
+    // Clear previous timeout
+    // if (rebuildTimeout) {
+    //   clearTimeout(rebuildTimeout);
+    // }
 
-      console.log(`👻 Rebuilding due to change in ${path}...`);
-      await runOnce();
-    }, 500);
+    // Debounce rebuilds by 500ms
+    // rebuildTimeout = setTimeout(async () => {
+    //   // console.clear();
+
+    //   console.log(`👻 Rebuilding due to change in ${path}...`);
+    //   await runOnce();
+    // }, 500)
   });
 
   watcher.on("error", (error) => {

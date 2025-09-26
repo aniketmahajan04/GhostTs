@@ -10,3 +10,11 @@ console.log(add(3, 7));
 
 console.log(sub(4, 2));
 console.log("Hello ");
+
+console.log("Hello ");
+console.log("good bye");
+
+function greet() {
+  console.log("I think it will get finished soon");
+}
+greet();
