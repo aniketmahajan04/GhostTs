@@ -3,6 +3,7 @@ import path from "path";
 import { compileTs } from "./compiler";
 import ts from "typescript";
 import { formatError, formatTSDiagnostic } from "../errors/errors";
+import { AutoTypeInstaller } from "./autoTypeInstaller";
 
 interface BuildOptions {
   srcDir?: string;
@@ -65,30 +66,68 @@ export async function buildProject(options: BuildOptions) {
 
     console.log(`📁 Found ${tsFiles.length} TypeScript files`);
 
+    const projectRoot = path.resolve(srcDir, "..");
+    const typeInstaller = new AutoTypeInstaller(projectRoot);
+    await typeInstaller.installFromPackageJson();
+
     // Type check all files at once (faster than individial checks)
     console.log("🔍 Type cheking...");
-    const program = ts.createProgram(tsFiles, {
+    const typeCheckConfig = {
       target: ts.ScriptTarget.ES2020,
       module: ts.ModuleKind.CommonJS,
       strict: true,
       noEmit: true,
+      esModuleInterop: true,
+      allowSyntheticDefaultImports: true,
+      skipLibCheck: true,
+      resolveJsonModule: true,
       rootDir: srcDir,
       baseUrl: srcDir,
-    });
+      paths: { "@/*": ["./*"] },
+    };
 
-    const diagnostics = ts.getPreEmitDiagnostics(program);
-    const error = diagnostics.filter(
+    let program = ts.createProgram(tsFiles, typeCheckConfig);
+    let diagnostics = ts.getPreEmitDiagnostics(program);
+    let errors = diagnostics.filter(
       (d) => d.category === ts.DiagnosticCategory.Error
     );
 
-    if (error.length > 0) {
-      console.log(`❌ Found ${error.length} type error(s):\n`);
+    if (errors.length > 0) {
+      const errorMessages = errors.map((d) =>
+        typeof d.messageText === "string"
+          ? d.messageText
+          : d.messageText.messageText
+      );
 
-      for (const diagnostic of error) {
-        console.error(formatTSDiagnostic(diagnostic));
+      const installResult =
+        await typeInstaller.installFromErrors(errorMessages);
+
+      if (installResult.installed.length > 0) {
+        console.log("🔄 Retrying type checking after installing types...");
+
+        // Retry type checking
+        program = ts.createProgram(tsFiles, typeCheckConfig);
+        diagnostics = ts.getPreEmitDiagnostics(program);
+        errors = diagnostics.filter(
+          (d) => d.category === ts.DiagnosticCategory.Error
+        );
+
+        if (errors.length === 0) {
+          console.log("✅ Type check passed after installing types!");
+        }
       }
 
-      process.exit(1);
+      // Show errors if still failing
+      if (errors.length > 0) {
+        console.log(`❌ Found ${errors.length} type error(s):\n`);
+        for (const diagnostics of errors) {
+          console.error(formatTSDiagnostic(diagnostics));
+        }
+
+        process.exit(1);
+      }
+    } else {
+      console.log("✅ Type check passed");
     }
 
     console.log("✅ Type check passed");
@@ -105,6 +144,8 @@ export async function buildProject(options: BuildOptions) {
         if (!outFile) {
           throw new Error("Error building project");
         }
+
+        successCount++;
         console.log(`✅ Built: ${path.relative(process.cwd(), file)}`);
         console.log(`✅ Built: ${path.relative(process.cwd(), outFile)}`);
       } catch (error: any) {
