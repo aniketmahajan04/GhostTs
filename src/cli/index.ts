@@ -17,11 +17,16 @@ interface BuildOptions {
 
 const program = new Command();
 
-program.name("ghostts").description("GhostTs -- zero-config Typescript tool");
+program
+  .name("ghostts")
+  .description("GhostTs -- zero-config Typescript tool")
+  .version("1.0.0");
 
 program
+  .command("run")
   .argument("<file>", "entry .ts file")
   .option("-w, --watch", "watch mode")
+  .option("-h, --help", "display help for command")
   .action(async (file: string, option: CliOptions) => {
     try {
       if (option.watch) {
@@ -40,6 +45,7 @@ program
   .command("build")
   .argument("<srcDir>", "source folder (like ./src)")
   .option("--outdir <dir>", "output directory", "./dist")
+  .option("-h, --help", "display help for command")
   .action(async (srcDir: string, option: BuildOptions) => {
     try {
       console.log(`🔨 Building project from ${srcDir} to ${option.outdir}`);
