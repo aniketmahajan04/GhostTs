@@ -10,7 +10,7 @@ import { formatRuntimeError } from "../errors/errors";
 
 interface CliOptions {
   watch?: boolean;
-  run: string;
+  mode: "run";
 }
 interface BuildOptions {
   mode: "build";
@@ -34,10 +34,8 @@ program
       if (option.watch) {
         console.log("watching...");
         await watchFile(file);
-      } else if (option.run) {
-        await runFile({ entryFile: file, mode: "run" });
       } else {
-        console.log("Invalid command try ghostts --help");
+        await runFile({ entryFile: file, mode: "run" });
       }
     } catch (error: any) {
       console.log("Error: ", error);
