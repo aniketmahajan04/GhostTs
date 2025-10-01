@@ -76,6 +76,6 @@ export async function compileTs(
       return outFile;
     }
   } catch (error) {
-    throw error;
+    console.error("Error ", error);
   }
 }

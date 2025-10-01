@@ -6,9 +6,11 @@ import { Command } from "commander";
 import { runFile } from "../core/runner";
 import { watchFile } from "../watch/watcher";
 import { buildProject } from "../core/builder";
+import { formatRuntimeError } from "../errors/errors";
 
 interface CliOptions {
   watch?: boolean;
+  run: string;
 }
 interface BuildOptions {
   mode: "build";
@@ -32,10 +34,12 @@ program
       if (option.watch) {
         console.log("watching...");
         await watchFile(file);
+      } else if (option.run) {
+        await runFile({ entryFile: file, mode: "run" });
       } else {
-        await runFile({ entryFile: file });
+        console.log("Invalid command try ghostts --help");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error: ", error);
       process.exit(1);
     }
@@ -57,4 +61,11 @@ program
   });
 //Disk-base compilation for deployment
 
+program.on("command:*", () => {
+  console.error(
+    "Invalid command: %s\nTry ghostts --help for a list of available commands.",
+    program.args.join(" ")
+  );
+  process.exit(1);
+});
 program.parse();

@@ -11,6 +11,7 @@ import { typeCheckWithAPI } from "./typeChecker";
 
 interface RunFileOptions {
   entryFile: string;
+  mode?: "run";
   build?: {
     outdir: string;
     mode: "build";
@@ -33,7 +34,7 @@ export async function runFile(options: RunFileOptions): Promise<ChildProcess> {
       const errorMessages = result.diagnostics.map((d) =>
         typeof d.messageText === "string"
           ? d.messageText
-          : d.messageText.messageText,
+          : d.messageText.messageText
       );
       const installResult =
         await typeInstaller.installFromErrors(errorMessages);
