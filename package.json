@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A tool that let you run TS file without setting up TS project.",
   "main": "dist/cli/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b",
     "start": "node dist/cli/index.js",
@@ -19,7 +20,7 @@
     "types",
     "esbuild"
   ],
-  "author": "Aniket mahajananiket@207gmail.com",
+  "author": "Aniket mahajananiket@207gmail.com (https://github.com/aniketmahajan04)",
   "license": "MIT",
   "repository": {
     "type": "git",
