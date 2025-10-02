@@ -20,7 +20,7 @@
     "esbuild"
   ],
   "author": "Aniket mahajananiket@207gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/aniketmahajan04/GhostTs"
@@ -35,6 +35,11 @@
     "commander": "^14.0.0",
     "esbuild": "^0.25.9"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "ghostts": "./dist/cli/index.js"
   },
