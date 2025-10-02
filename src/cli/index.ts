@@ -10,7 +10,6 @@ import { formatRuntimeError } from "../errors/errors";
 
 interface CliOptions {
   watch?: boolean;
-  mode: "run";
 }
 interface BuildOptions {
   mode: "build";
@@ -27,15 +26,16 @@ program
 program
   .command("run")
   .argument("<file>", "entry .ts file")
+  .description("Execute a Typescript file.")
   .option("-w, --watch", "watch mode")
-  .option("-h, --help", "display help for command")
+  // .option("-h, --help", "display help for command")
   .action(async (file: string, option: CliOptions) => {
     try {
       if (option.watch) {
         console.log("watching...");
         await watchFile(file);
       } else {
-        await runFile({ entryFile: file, mode: "run" });
+        await runFile({ entryFile: file });
       }
     } catch (error: any) {
       console.log("Error: ", error);
@@ -46,11 +46,12 @@ program
 program
   .command("build")
   .argument("<srcDir>", "source folder (like ./src)")
+  .description("Build a Typescript project.")
   .option("--outdir <dir>", "output directory", "./dist")
-  .option("-h, --help", "display help for command")
+  // .option("-h, --help", "display help for command")
   .action(async (srcDir: string, option: BuildOptions) => {
     try {
-      console.log(`🔨 Building project from ${srcDir} to ${option.outdir}`);
+      // console.log(`🔨 Building project from ${srcDir} to ${option.outdir}`);
       await buildProject({ srcDir, outDir: option.outdir });
     } catch (error) {
       console.error("❌ Build failed:", error);

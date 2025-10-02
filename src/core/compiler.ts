@@ -24,10 +24,10 @@ export async function compileTs(
 ): Promise<string | void> {
   try {
     const projectRoot = path.dirname(entryFile);
-    const alias = {
-      "@": projectRoot,
-      "~": projectRoot,
-    };
+    // const alias = {
+    //   "@": projectRoot,
+    //   "~": projectRoot,
+    // };
     if (option.mode === "build") {
       const srcDir = option.srcDir ?? "src";
       const outDir = option.outdir ?? "dist";
@@ -49,11 +49,12 @@ export async function compileTs(
         outdir: path.dirname(outPath),
         write: true,
         target: "node14",
-        allowOverwrite: true,
-        mainFields: ["main", "module"],
-        conditions: ["node"],
         loader: loaderConfig,
-        alias: alias,
+        // allowOverwrite: true,
+        // mainFields: ["main", "module"],
+        // conditions: ["node"],
+        // loader: loaderConfig,
+        // alias: alias,
       });
       return outPath;
     } else {
@@ -71,7 +72,7 @@ export async function compileTs(
         mainFields: ["main", "module"],
         conditions: ["node"],
         loader: loaderConfig,
-        alias: alias,
+        // alias: alias,
       });
       return outFile;
     }

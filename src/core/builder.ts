@@ -47,7 +47,6 @@ export async function buildProject(options: BuildOptions) {
     // Clean output directory (like tsc)
     try {
       await fs.rm(outDir, { recursive: true, force: true });
-      console.log(`🧹 Cleaned ${outDir}`);
     } catch (error) {
       // Directory might not exist, that's fine
       console.error("Directory might not exists");
@@ -83,7 +82,7 @@ export async function buildProject(options: BuildOptions) {
       resolveJsonModule: true,
       rootDir: srcDir,
       baseUrl: srcDir,
-      paths: { "@/*": ["./*"] },
+      // paths: { "@/*": ["./*"] },
     };
 
     let program = ts.createProgram(tsFiles, typeCheckConfig);
@@ -130,7 +129,7 @@ export async function buildProject(options: BuildOptions) {
       console.log("✅ Type check passed");
     }
 
-    console.log("✅ Type check passed");
+    // console.log("✅ Type check passed");
 
     // compile each files
     let successCount = 0;
@@ -146,8 +145,8 @@ export async function buildProject(options: BuildOptions) {
         }
 
         successCount++;
-        console.log(`✅ Built: ${path.relative(process.cwd(), file)}`);
-        console.log(`✅ Built: ${path.relative(process.cwd(), outFile)}`);
+        // console.log(`✅ Built: ${path.relative(process.cwd(), file)}`);
+        // console.log(`✅ Built: ${path.relative(process.cwd(), outFile)}`);
       } catch (error: any) {
         console.error(`❌ Failed to compile ${file}:`, error);
 

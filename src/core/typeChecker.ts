@@ -18,10 +18,10 @@ export function typeCheckWithAPI(filepath: string): TypeChechResult {
       skipLibCheck: true, // Add this to skip @types issue
       resolveJsonModule: true,
       baseUrl: path.dirname(filepath),
-      paths: {
-        "@/*": ["./*"],
-        "~/*": ["./*"],
-      },
+      // paths: {
+      //   "@/*": ["./*"],
+      //   "~/*": ["./*"],
+      // },
     });
 
     const diagnostics = ts.getPreEmitDiagnostics(program);

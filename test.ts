@@ -18,3 +18,8 @@ function greet() {
   console.log("I think it will get finished soon");
 }
 greet();
+
+function greet2() {
+  console.log("Last test log");
+}
+greet2();

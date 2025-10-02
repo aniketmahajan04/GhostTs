@@ -1,0 +1,8 @@
+{
+  "port": 3000,
+  "database": {
+    "host": "localhost",
+    "name": "myapp"
+  },
+  "features": ["auth", "logging"]
+}
