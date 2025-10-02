@@ -1,21 +1,16 @@
-import { add } from "./utils/math";
-import { greet } from "./services/hello";
-import config from "./utils/config.json";
+import express from "express";
 
-interface User {
-  name: string;
-  age: number;
-}
+const app = express();
+const port = 3000;
 
-console.log(config.port);
-console.log(config.features);
-console.log(config.database);
+app.get("/", (req, res) => {
+  res.send("Hello Ghostts");
+});
 
-console.log(add(2, 3));
-console.log(greet("GhostTS"));
+app.get("/hello", (req, res) => {
+  res.send("Hello from ghosts");
+});
 
-const user: User = {
-  name: "Aniket",
-  age: 22,
-};
-console.log(user);
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});

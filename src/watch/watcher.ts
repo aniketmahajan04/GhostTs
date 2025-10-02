@@ -29,9 +29,9 @@ export async function watchFile(entryFile: string) {
 
           child?.on("exit", (code, signal) => {
             if (!resolved) {
-              console.log(
-                `✅ Process ${child?.pid} exited with code: ${code}, signal: ${signal}`
-              );
+              // console.log(
+              //   `✅ Process ${child?.pid} exited with code: ${code}, signal: ${signal}`
+              // );
               resolved = true;
               resolve(undefined);
             }
