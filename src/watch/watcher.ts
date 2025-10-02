@@ -11,7 +11,7 @@ export async function watchFile(entryFile: string) {
   let child: ChildProcess | null = null;
   let typeInstallerInitialized = false;
   const projectRoot = path.dirname(entryFile);
-  let rebuildTimeout: NodeJS.Timeout | null = null;
+  // let rebuildTimeout: NodeJS.Timeout | null = null;
 
   console.log("👀 Watching:", entryFile);
 
@@ -27,7 +27,7 @@ export async function watchFile(entryFile: string) {
         await new Promise((resolve) => {
           let resolved = false;
 
-          child?.on("exit", (code, signal) => {
+          child?.on("exit", () => {
             if (!resolved) {
               // console.log(
               //   `✅ Process ${child?.pid} exited with code: ${code}, signal: ${signal}`
