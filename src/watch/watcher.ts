@@ -89,8 +89,13 @@ export async function watchFile(entryFile: string) {
   });
 
   watcher.on("change", async (path) => {
+    // console.log("🔥 File change detected:", path);
+    // console.clear();
+    // process.stdout.write("\x1b[2J\x1b[3J\x1b[H");
+    // Add visual separator instead of clearing
+    console.log("\n" + "─".repeat(50));
     console.log("🔥 File change detected:", path);
-    console.clear();
+    console.log("─".repeat(50) + "\n");
 
     // Reset type installer if package.json changes
     if (path.endsWith("package.json")) {
