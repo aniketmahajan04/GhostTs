@@ -7,6 +7,8 @@ import { runFile } from "../core/runner";
 import { watchFile } from "../watch/watcher";
 import { buildProject } from "../core/builder";
 
+import packageJson from "../../package.json";
+
 interface CliOptions {
   watch?: boolean;
 }
@@ -20,7 +22,7 @@ const program = new Command();
 program
   .name("ghostts")
   .description("GhostTs -- zero-config Typescript tool")
-  .version("1.0.0");
+  .version(packageJson.version);
 
 program
   .command("run")
