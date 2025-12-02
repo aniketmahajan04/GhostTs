@@ -1,6 +1,6 @@
 {
   "name": "ghostts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A tool that let you run TS file without setting up TS project.",
   "main": "dist/cli/index.js",
   "types": "dist/index.d.ts",
