@@ -1,6 +1,6 @@
 {
   "name": "ghostts",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "A tool that let you run TS file without setting up TS project.",
   "main": "dist/cli/index.js",
   "types": "dist/index.d.ts",
@@ -55,7 +55,6 @@
     "@types/node": "^24.3.1",
     "@types/prettier": "^2.7.3",
     "eslint": "^9.35.0",
-    "husky": "^9.1.7",
     "prettier": "^3.6.2"
   },
   "homepage": "https://github.com/aniketmahajan04/GhostTs#readme"
